@@ -55,6 +55,8 @@ struct AddBookView: View {
                         dismiss()
                     }
                 }
+                // Project 11 - Challange 1
+                .disabled(title.isEmpty || author.isEmpty || genre.isEmpty)
             }
             .navigationTitle("Add Book")
         }

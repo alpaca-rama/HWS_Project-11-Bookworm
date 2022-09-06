@@ -10,6 +10,10 @@ import SwiftUI
 struct DetailView: View {
     let book: Book
     
+    @Environment(\.managedObjectContext) var moc
+    @Environment(\.dismiss) var dismiss
+    @State private var showingDeleteAlert = false
+    
     var body: some View {
         ScrollView {
             ZStack(alignment: .bottomTrailing) {
@@ -38,5 +42,27 @@ struct DetailView: View {
         }
         .navigationBarTitle(book.title ?? "Unkown Book")
         .navigationBarTitleDisplayMode(.inline)
+        .alert("Delete Book?", isPresented: $showingDeleteAlert) {
+            Button("Delete", role: .destructive, action: deleteBook)
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Are you sure?")
+        }
+        .toolbar {
+            Button {
+                showingDeleteAlert = true
+            } label: {
+                Label("Delete this book", systemImage: "trash")
+            }
+        }
+    }
+    
+    func deleteBook() {
+        moc.delete(book)
+        
+        //  comment this line out if you wish to test the edit and swipe to delete action without deleting the content from storage.
+//        try? moc.save()
+        dismiss()
     }
 }
+
